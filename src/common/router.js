@@ -168,8 +168,14 @@ export const getRouterData = app => {
     '/user/register-result': {
       component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
     },
-    '/record/list':{
-      component: dynamicWrapper(app, ['records'], () => import('../routes/Records/RecordList')),
+    '/tuiguang/record':{
+      component: dynamicWrapper(app, ['records'], () => import('../routes/TuiGuang/RecordList')),
+    },
+    '/tuiguang/click':{
+      component: dynamicWrapper(app, ['clicks'], () => import('../routes/TuiGuang/ClickList')),
+    },
+    '/tuiguang/copy':{
+      component: dynamicWrapper(app, ['copys'], () => import('../routes/TuiGuang/CopyList')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),

@@ -1,7 +1,7 @@
 import { getListsNum, getOnePageList } from '../services/records';
 
 export default {
-  namespace: 'records',
+  namespace: 'copys',
 
   state: {
     data:{
@@ -11,15 +11,12 @@ export default {
   },
 
   effects: {
-    *total({ payload }, { call, put, all }) {
-      const [total,page] = yield all([
-        call(getListsNum, payload),
-        call(getOnePageList, {
+    *total({ payload }, { call, put }) {
+      const [total,page] = yield [call(getListsNum, payload),call(getOnePageList, {
         ...payload,
         pageSize: 10,
         current:1,
-        }),
-      ]);
+      })];
 
       yield put({
         type: 'saveTotal',

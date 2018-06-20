@@ -155,13 +155,17 @@ const menuData = [
     ],
   },
   {
-    name:'浏览记录',
+    name:'推广记录',
     icon:'table',
-    path:'record',
+    path:'tuiguang',
     children:[
       {
         name: '浏览记录列表',
-        path: 'list',
+        path: 'record',
+      },
+      {
+        name: '点击记录列表',
+        path: 'click',
       },
     ],
   },

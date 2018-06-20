@@ -22,7 +22,7 @@ import {
 import StandardTableOne from 'components/StandardTableOne';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
-import styles from './RecordList.less';
+import styles from './ClickList.less';
 
 const FormItem = Form.Item;
 const {Option} = Select;
@@ -31,12 +31,12 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({records, loading}) => ({
-  records,
-  loading: loading.models.records,
+@connect(({clicks, loading}) => ({
+  clicks,
+  loading: loading.models.clicks,
 }))
 @Form.create()
-export default class RecordList extends PureComponent {
+export default class ClickList extends PureComponent {
   state = {
     expandForm: false,
     formValues: {},
@@ -45,10 +45,7 @@ export default class RecordList extends PureComponent {
   componentDidMount() {
     const {dispatch} = this.props;
     dispatch({
-      type: 'records/total',
-    });
-    dispatch({
-      type: 'records/page',
+      type: 'clicks/total',
       payload: {
         pageSize: 10,
         current:1,
@@ -57,8 +54,6 @@ export default class RecordList extends PureComponent {
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
-
-    console.log(pagination);
 
     const {dispatch} = this.props;
     const {formValues} = this.state;
@@ -77,12 +72,10 @@ export default class RecordList extends PureComponent {
     };
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
-    };
-
-    console.log(params);
+    }
 
     dispatch({
-      type: 'records/page',
+      type: 'clicks/page',
       payload: params,
     });
   };
@@ -94,7 +87,7 @@ export default class RecordList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'records/fetch',
+      type: 'clicks/fetch',
       payload: {},
     });
   };
@@ -115,15 +108,19 @@ export default class RecordList extends PureComponent {
 
       const values = {
         ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
+
+      if(fieldsValue.click_date_from){values.click_date_from = fieldsValue.click_date_from.valueOf()}
+      if(fieldsValue.click_date_to){values.click_date_to = fieldsValue.click_date_to.valueOf()}
 
       this.setState({
         formValues: values,
       });
 
+      console.log(values)
+
       dispatch({
-        type: 'records/fetch',
+        type: 'clicks/total',
         payload: values,
       });
     });
@@ -136,17 +133,12 @@ export default class RecordList extends PureComponent {
         <Row gutter={{md: 8, lg: 24, xl: 48}}>
           <Col md={8} sm={24}>
             <FormItem label="文章标题">
-              {getFieldDecorator('no')(<Input placeholder="请输入"/>)}
+              {getFieldDecorator('click_title')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="组别">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{width: '100%'}}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
+              {getFieldDecorator('click_team')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -158,7 +150,7 @@ export default class RecordList extends PureComponent {
                 重置
               </Button>
               <a style={{marginLeft: 8}} onClick={this.toggleForm}>
-                展开 <Icon type="down"/>
+                展开 <Icon type="down" />
               </a>
             </span>
           </Col>
@@ -174,37 +166,38 @@ export default class RecordList extends PureComponent {
         <Row gutter={{md: 8, lg: 24, xl: 48}}>
           <Col md={8} sm={24}>
             <FormItem label="文章标题">
-              {getFieldDecorator('no')(<Input placeholder="请输入"/>)}
+              {getFieldDecorator('click_title')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="组对">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{width: '100%'}}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
+            <FormItem label="组别">
+              {getFieldDecorator('click_team')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="设备">
-              {getFieldDecorator('number')(<InputNumber style={{width: '100%'}}/>)}
+              {getFieldDecorator('click_device')(
+                <Select placeholder="请选择" style={{ width: '100%' }}>
+                  <Option value="iPhone">iPhone</Option>
+                  <Option value="Android">Android</Option>
+                  <Option value="unknown">未知</Option>
+                </Select>
+              )}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{md: 8, lg: 24, xl: 48}}>
           <Col md={8} sm={24}>
             <FormItem label="起始日期">
-              {getFieldDecorator('date')(
-                <DatePicker style={{width: '100%'}} placeholder="请输入更新日期"/>
+              {getFieldDecorator('click_date_from')(
+                <DatePicker style={{width: '100%'}} placeholder="请输入更新日期" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="结束日期">
-              {getFieldDecorator('date')(
-                <DatePicker style={{width: '100%'}} placeholder="请输入更新日期"/>
+              {getFieldDecorator('click_date_to')(
+                <DatePicker style={{width: '100%'}} placeholder="请输入更新日期" />
               )}
             </FormItem>
           </Col>
@@ -218,7 +211,7 @@ export default class RecordList extends PureComponent {
               重置
             </Button>
             <a style={{marginLeft: 8}} onClick={this.toggleForm}>
-              收起 <Icon type="up"/>
+              收起 <Icon type="up" />
             </a>
           </span>
         </div>
@@ -231,28 +224,32 @@ export default class RecordList extends PureComponent {
   }
 
   render() {
-    const {records: {data}, loading} = this.props;
+    const {clicks: {data}, loading} = this.props;
 
     const columns = [
       {
         title: '文章标题',
-        dataIndex: 'record_title',
+        dataIndex: 'click_title',
       },
       {
         title: '浏览设备',
-        dataIndex: 'record_device',
+        dataIndex: 'click_device',
+      },
+      {
+        title: '点击按钮',
+        dataIndex: 'click_btn',
       },
       {
         title: '用户IP',
-        dataIndex: 'record_ip',
+        dataIndex: 'click_ip',
       },
       {
         title: '组别',
-        dataIndex: 'record_team',
+        dataIndex: 'click_team',
       },
       {
         title: '记录时间',
-        dataIndex: 'record_date',
+        dataIndex: 'click_date',
         sorter: true,
         render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },

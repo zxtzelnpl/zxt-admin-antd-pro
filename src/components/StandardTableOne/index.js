@@ -3,18 +3,8 @@ import { Table, Alert } from 'antd';
 import styles from './index.less';
 
 class StandardTableOne extends PureComponent {
-  constructor(props) {
-    super(props);
-    const { columns } = props;
-  }
-
-
   handleTableChange = (pagination, filters, sorter) => {
     this.props.onChange(pagination, filters, sorter);
-  };
-
-  cleanSelectedKeys = () => {
-    this.handleRowSelectChange([], []);
   };
 
   render() {
