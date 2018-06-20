@@ -167,6 +167,10 @@ const menuData = [
         name: '点击记录列表',
         path: 'click',
       },
+      {
+        name: '复制记录列表',
+        path: 'copy',
+      },
     ],
   },
 ];

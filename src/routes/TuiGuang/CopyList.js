@@ -22,7 +22,7 @@ import {
 import StandardTableOne from 'components/StandardTableOne';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
-import styles from './ClickList.less';
+import styles from './CopyList.less';
 
 const FormItem = Form.Item;
 const {Option} = Select;
@@ -31,12 +31,12 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@connect(({clicks, loading}) => ({
-  clicks,
-  loading: loading.models.clicks,
+@connect(({copys, loading}) => ({
+  copys,
+  loading: loading.models.copys,
 }))
 @Form.create()
-export default class ClickList extends PureComponent {
+export default class CopyList extends PureComponent {
   state = {
     expandForm: false,
     formValues: {},
@@ -45,7 +45,7 @@ export default class ClickList extends PureComponent {
   componentDidMount() {
     const {dispatch} = this.props;
     dispatch({
-      type: 'clicks/total',
+      type: 'copys/total',
       payload: {
         pageSize: 10,
         current:1,
@@ -75,7 +75,7 @@ export default class ClickList extends PureComponent {
     };
 
     dispatch({
-      type: 'clicks/page',
+      type: 'copys/page',
       payload: params,
     });
   };
@@ -87,7 +87,7 @@ export default class ClickList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'clicks/fetch',
+      type: 'copys/fetch',
       payload: {},
     });
   };
@@ -110,8 +110,8 @@ export default class ClickList extends PureComponent {
         ...fieldsValue,
       };
 
-      if(fieldsValue.click_date_from){values.click_date_from = fieldsValue.click_date_from.valueOf()}
-      if(fieldsValue.click_date_to){values.click_date_to = fieldsValue.click_date_to.valueOf()}
+      if(fieldsValue.copy_date_from){values.copy_date_from = fieldsValue.copy_date_from.valueOf()}
+      if(fieldsValue.copy_date_to){values.copy_date_to = fieldsValue.copy_date_to.valueOf()}
 
       this.setState({
         formValues: values,
@@ -120,7 +120,7 @@ export default class ClickList extends PureComponent {
       console.log(values)
 
       dispatch({
-        type: 'clicks/total',
+        type: 'copys/total',
         payload: values,
       });
     });
@@ -133,12 +133,12 @@ export default class ClickList extends PureComponent {
         <Row gutter={{md: 8, lg: 24, xl: 48}}>
           <Col md={8} sm={24}>
             <FormItem label="文章标题">
-              {getFieldDecorator('click_title')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('copy_title')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="组别">
-              {getFieldDecorator('click_team')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('copy_team')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -166,17 +166,17 @@ export default class ClickList extends PureComponent {
         <Row gutter={{md: 8, lg: 24, xl: 48}}>
           <Col md={8} sm={24}>
             <FormItem label="文章标题">
-              {getFieldDecorator('click_title')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('copy_title')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="组别">
-              {getFieldDecorator('click_team')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('copy_team')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="设备">
-              {getFieldDecorator('click_device')(
+              {getFieldDecorator('copy_device')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="iPhone">iPhone</Option>
                   <Option value="Android">Android</Option>
@@ -188,15 +188,20 @@ export default class ClickList extends PureComponent {
         </Row>
         <Row gutter={{md: 8, lg: 24, xl: 48}}>
           <Col md={8} sm={24}>
+            <FormItem label="复制文本">
+              {getFieldDecorator('copy_text')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
             <FormItem label="起始日期">
-              {getFieldDecorator('click_date_from')(
+              {getFieldDecorator('copy_date_from')(
                 <DatePicker style={{width: '100%'}} placeholder="请输入更新日期" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="结束日期">
-              {getFieldDecorator('click_date_to')(
+              {getFieldDecorator('copy_date_to')(
                 <DatePicker style={{width: '100%'}} placeholder="请输入更新日期" />
               )}
             </FormItem>
@@ -224,28 +229,32 @@ export default class ClickList extends PureComponent {
   }
 
   render() {
-    const {clicks: {data}, loading} = this.props;
+    const {copys: {data}, loading} = this.props;
 
     const columns = [
       {
         title: '文章标题',
-        dataIndex: 'click_title',
+        dataIndex: 'copy_title',
       },
       {
         title: '浏览设备',
-        dataIndex: 'click_device',
+        dataIndex: 'copy_device',
+      },
+      {
+        title: '复制文本',
+        dataIndex: 'copy_text',
       },
       {
         title: '用户IP',
-        dataIndex: 'click_ip',
+        dataIndex: 'copy_ip',
       },
       {
         title: '组别',
-        dataIndex: 'click_team',
+        dataIndex: 'copy_team',
       },
       {
         title: '记录时间',
-        dataIndex: 'click_date',
+        dataIndex: 'copy_date',
         sorter: true,
         render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },

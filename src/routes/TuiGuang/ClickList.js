@@ -45,11 +45,7 @@ export default class ClickList extends PureComponent {
   componentDidMount() {
     const {dispatch} = this.props;
     dispatch({
-      type: 'clicks/total',
-      payload: {
-        pageSize: 10,
-        current:1,
-      },
+      type: 'clicks/total'
     });
   }
 
@@ -87,8 +83,7 @@ export default class ClickList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'clicks/fetch',
-      payload: {},
+      type: 'clicks/total'
     });
   };
 
@@ -187,6 +182,11 @@ export default class ClickList extends PureComponent {
           </Col>
         </Row>
         <Row gutter={{md: 8, lg: 24, xl: 48}}>
+          <Col md={8} sm={24}>
+            <FormItem label="点击按钮">
+              {getFieldDecorator('click_btn')(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
           <Col md={8} sm={24}>
             <FormItem label="起始日期">
               {getFieldDecorator('click_date_from')(
